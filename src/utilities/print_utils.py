@@ -1,5 +1,9 @@
 from termcolor import colored
-from os import get_terminal_size
+from os import get_terminal_size, name, system
+
+
+def clear():
+    system('clear' if name == 'nt' else 'cls')
 
 
 class StyledText:
