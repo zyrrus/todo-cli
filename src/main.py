@@ -3,10 +3,15 @@ import os
 import click
 import termcolor
 
-from column_manager import ColumnManager
+from rendering.column_manager import ColumnManager
+from utilities.storage import Storage
 
 
 def main():
+    path = './src/data/workspaces.json'
+
+    storage = Storage(path)
+
     cm = ColumnManager()
     cm.render()
 
