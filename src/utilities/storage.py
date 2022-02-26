@@ -3,8 +3,8 @@ import pathlib
 
 
 class Storage:
-    def __init__(self, path_to_data):
-        self.path = path_to_data  # Use pathlib
+    def __init__(self, storage_path):
+        self.path = storage_path  # Use pathlib
         self.data = self.load_data()
 
     def load_data(self):
