@@ -1,0 +1,42 @@
+{
+    "workspaces": [
+        {
+            "name": "Workspace 1",
+            "columns": [
+                {
+                    "title": "Title A",
+                    "data": ["line 1", "line 2", "decoy data!"]
+                },
+                {
+                    "title": "Title B",
+                    "data": [
+                        "line 3",
+                        "line 4",
+                        "decoy data!",
+                        "decoy data!",
+                        "decoy data!"
+                    ]
+                },
+                {
+                    "title": "Title C",
+                    "data": ["line 5", "decoy data!"]
+                }
+            ]
+        },
+        {
+            "name": "Workspace 2",
+            "columns": [
+                {
+                    "title": "Title D",
+                    "data": ["line 6", "decoy data!"]
+                },
+                {
+                    "title": "Title A",
+                    "data": ["line 1", "line 2", "decoy data!"]
+                }
+            ]
+        }
+    ],
+    "selected": 0,
+    "settings": {}
+}
