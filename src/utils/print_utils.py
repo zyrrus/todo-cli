@@ -3,7 +3,7 @@ from os import get_terminal_size, name, system
 
 
 def clear():
-    system('clear' if name == 'nt' else 'cls')
+    system('cls' if name == 'nt' else 'clear')
 
 
 class StyledText:
@@ -45,8 +45,8 @@ class StyledText:
 def main():
     text = StyledText('hi there, this is a test.')
     print(
-        text.full_pad(get_terminal_size().columns, justification='center')
-            .style(attrs=['dark'], color=None, on_color='on_red')
+        text.full_pad(get_terminal_size().columns, justification='right')
+            .style(attrs=['bold'], color=None, on_color='on_red')
     )
 
 

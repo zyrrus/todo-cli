@@ -1,6 +1,6 @@
 import os
 
-from rendering.column import Column
+from render.column import Column
 
 
 class ColumnManager:

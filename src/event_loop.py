@@ -1,4 +1,4 @@
-from utilities.print_utils import clear
+from utils.print_utils import clear
 
 
 class EventLoop:
