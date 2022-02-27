@@ -1,4 +1,7 @@
+from utils.data_utils import get_cur_workspace, get_columns
 from utils.print_utils import clear
+from utils.storage import Storage
+from render.column_manager import ColumnManager
 
 
 class EventLoop:
@@ -9,12 +12,18 @@ class EventLoop:
             create columns
         '''
 
-        self.storage = Storage(path)
-        self.cm = ColumnManager(self.storage.data)
+        self.storage = Storage(storage_path)
+
+        ws = get_cur_workspace(self.storage.data)
+        num_cols = get_columns(ws)
+
+        self.cm = ColumnManager()
+        self.cm.init_data(ws)
 
     def loop(self):
+        clear()
         user_input = ''
         while user_input != ':q':
-            clear()
             self.cm.render()
             user_input = input()
+            clear()
