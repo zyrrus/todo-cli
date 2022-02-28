@@ -66,14 +66,19 @@ class ColumnManager:
             return
         elif user_input == Key.up:
             self.selected = cycle_in_range(
-                self.selected - 1, 0, self.term_height)
+                self.selected - 1, 0, self.term_height - 2)
         elif user_input == Key.down:
             self.selected = cycle_in_range(
-                self.selected + 1, 0, self.term_height)
+                self.selected + 1, 0, self.term_height - 2)
         elif user_input == Key.left:
-            pass
+            self.focused = cycle_in_range(
+                self.focused - 1, 0, self.col_count - 1)
         elif user_input == Key.right:
-            pass
+            self.focused = cycle_in_range(
+                self.focused + 1, 0, self.col_count - 1)
+
+        for col in self.columns:
+            col.set_focus(False)
 
         highlight = self.columns[self.focused]
         highlight.set_focus(True)

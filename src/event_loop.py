@@ -1,3 +1,5 @@
+from time import sleep
+
 from pynput.keyboard import Key, Events
 
 from utils.input_utils import key
@@ -41,4 +43,5 @@ class EventLoop:
             # self.cm.log()
             self.cm.render()
             user_input = self._get_valid_key()
+            sleep(0.1)
             clear()
