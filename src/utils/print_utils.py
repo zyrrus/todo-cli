@@ -8,6 +8,7 @@ def clear():
 
 class StyledText:
     def __init__(self, text):
+        self.original = text
         self.text = text
 
     def __str__(self):
@@ -16,11 +17,8 @@ class StyledText:
     def __repr__(self):
         return self.__str__()
 
-    def padded(self, padding=1, left=True, right=False):
-        if left:
-            self.text = self.text.rjust(padding)
-        if right:
-            self.text = self.text.ljust(padding)
+    def padded(self, padding=1):
+        self.text = " " * padding + self.original
         return self
 
     def full_pad(self, width, justification='left'):

@@ -1,3 +1,6 @@
+from pynput.keyboard import Key, Events
+
+from utils.input_utils import key
 from utils.data_utils import get_cur_workspace, get_columns
 from utils.print_utils import clear
 from utils.storage import Storage
@@ -20,10 +23,22 @@ class EventLoop:
         self.cm = ColumnManager()
         self.cm.init_data(ws)
 
+    def _get_valid_key(self):
+        valid_keys = [Key.up, Key.down, Key.left,
+                      Key.right, key('q')]
+
+        with Events() as events:
+            while True:
+                event = events.get()
+                if event.key in valid_keys:
+                    return event.key
+
     def loop(self):
         clear()
         user_input = ''
-        while user_input != ':q':
+        while user_input != key('q'):
+            self.cm.update(user_input)
+            # self.cm.log()
             self.cm.render()
-            user_input = input()
+            user_input = self._get_valid_key()
             clear()
