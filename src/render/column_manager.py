@@ -1,13 +1,9 @@
 import os
 
-from pynput.keyboard import Key
-
+from constants import Keys
 from render.column import Column
 from utils.print_utils import StyledText
-from utils.input_utils import cycle_in_range, key
-
-
-HEADER_SIZE = 1
+from utils.input_utils import cycle_in_range
 
 
 class ColumnManager:
@@ -19,7 +15,7 @@ class ColumnManager:
         self.title = ''
 
         self.os_size = os.get_terminal_size()
-        self.term_height = self.os_size.lines - 2 - HEADER_SIZE
+        self.term_height = self.os_size.lines - 3
 
     def calc_dimensions(self):
         self.term_width = self.os_size.columns - \
@@ -62,18 +58,20 @@ class ColumnManager:
             print()
 
     def update(self, user_input):
-        if user_input == key('q'):
+        if Keys.is_equal(user_input, Keys.leave):
             return
-        elif user_input == Key.up:
+        elif Keys.is_equal(user_input, Keys.select):
+            pass
+        elif Keys.is_equal(user_input, Keys.up):
             self.selected = cycle_in_range(
                 self.selected - 1, 0, self.term_height - 2)
-        elif user_input == Key.down:
+        elif Keys.is_equal(user_input, Keys.down):
             self.selected = cycle_in_range(
                 self.selected + 1, 0, self.term_height - 2)
-        elif user_input == Key.left:
+        elif Keys.is_equal(user_input, Keys.left):
             self.focused = cycle_in_range(
                 self.focused - 1, 0, self.col_count - 1)
-        elif user_input == Key.right:
+        elif Keys.is_equal(user_input, Keys.right):
             self.focused = cycle_in_range(
                 self.focused + 1, 0, self.col_count - 1)
 
