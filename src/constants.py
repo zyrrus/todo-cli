@@ -12,7 +12,7 @@ def key(char):
 
 class Keys(Enum):
     leave = [Key.esc, key('q')]
-    select = [Key.enter]
+    select = [Key.shift]
     up = [Key.up, key('w')]
     left = [Key.left, key('a')]
     down = [Key.down, key('s')]

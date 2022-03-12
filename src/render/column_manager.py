@@ -11,6 +11,7 @@ class ColumnManager:
         self.col_count = 0
         self.focused = 0
         self.selected = 1
+        self.is_holding = False
         self.columns = []
         self.title = ''
 
@@ -61,7 +62,9 @@ class ColumnManager:
         if Keys.is_equal(user_input, Keys.leave):
             return
         elif Keys.is_equal(user_input, Keys.select):
-            pass
+            held = self.columns[self.focused]
+            self.is_holding = not self.is_holding
+            held.set_hold(self.is_holding)
         elif Keys.is_equal(user_input, Keys.up):
             self.selected = cycle_in_range(
                 self.selected - 1, 0, self.term_height - 2)

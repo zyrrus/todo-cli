@@ -1,4 +1,5 @@
 from time import sleep
+import sys
 
 from pynput.keyboard import Events
 
@@ -20,6 +21,7 @@ class EventLoop:
         self.cm.init_data(ws)
 
     def _get_valid_key(self):
+        sys.stdin.flush()
         with Events() as events:
             while True:
                 event = events.get()
@@ -30,9 +32,14 @@ class EventLoop:
         clear()
         user_input = ''
         while not Keys.is_equal(user_input, Keys.leave):
+            # Core event loop
+            self.cm.render()
             self.cm.update(user_input)
             # self.cm.log()
-            self.cm.render()
+
+            # Get input
             user_input = self._get_valid_key()
+
+            # Prepare for next loop
             sleep(0.12)
             clear()
