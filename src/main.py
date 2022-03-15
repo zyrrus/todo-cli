@@ -1,17 +1,17 @@
 import os
 
-import termcolor
-
-from constants import STORAGE_PATH
-from render.column_manager import ColumnManager
+from render.workspace_renderer import WorkspaceRenderer
 from utils.storage import Storage
-from utils.print_utils import clear
-from event_loop import EventLoop
 
 
 def main():
-    el = EventLoop(STORAGE_PATH)
-    el.loop()
+    # el = EventLoop(STORAGE_PATH)
+    # el.loop()
+
+    s = Storage('./src/data/workspaces.json')
+
+    wr = WorkspaceRenderer(s.data["workspaces"][0])
+    wr.render()
 
 
 if __name__ == '__main__':

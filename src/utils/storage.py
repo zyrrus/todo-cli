@@ -9,7 +9,8 @@ class Storage:
 
     def load_data(self):
         with open(self.path, "r") as input_file:
-            return json.load(input_file)
+            data = json.load(input_file)
+        return data
 
     def save_data(self):
         data = json.dumps(self.data, indent=4)
