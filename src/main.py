@@ -1,6 +1,5 @@
 import os
 
-import click
 import termcolor
 
 from constants import STORAGE_PATH
