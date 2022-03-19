@@ -1,13 +1,13 @@
 from rich import box
-from rich.console import Console
 from rich.table import Table
+from rich.text import Text
 
 
 class WorkspaceRenderer:
     def __init__(self, workspace):
         self.ws_json = workspace
 
-    def render(self):
+    def render(self, console):
         title = self.ws_json['name']
         columns = self.ws_json['columns']
         unsorted_column_data = []
@@ -31,13 +31,10 @@ class WorkspaceRenderer:
                 for _ in range(diff):
                     column.append("")
 
-        print(unsorted_column_data)
-
         sorted_column_data = zip(*unsorted_column_data)
 
         for line in sorted_column_data:
+            line = [Text(text, style='bold magenta blink') for text in line]
             table.add_row(*line)
 
-        console = Console()
-        console.clear()
         console.print(table)
