@@ -29,9 +29,11 @@ def get_ws_from_md(md_filepath, ws_height):
             # Parse Task
             elif line.startswith('-'):
                 ts_name = line[1:].strip()
+                # Mark selected task + list
                 if ts_name.startswith(SELECTED_ICON):
                     task = Task(ts_name[1:].strip())
                     task.set_selected(True)
+                    last_list.set_selected(True)
                 else:
                     task = Task(ts_name)
                 last_list.add_child(task)

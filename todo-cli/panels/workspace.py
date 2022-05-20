@@ -23,3 +23,12 @@ class Workspace(AbstractPanel):
 
             for ls in self.children:
                 ls.save(out)
+
+    def get_selected_list(self):
+        for ls in self.children:
+            if ls.is_selected == True:
+                return ls
+
+    def get_selected_task(self):
+        selected_list = self.get_selected_list()
+        return selected_list.get_selected_task()

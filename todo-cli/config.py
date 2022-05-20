@@ -16,3 +16,4 @@ SELECTED_ICON = '!'
 
 # Color when task is highlighted
 TS_HIGHLIGHT = 'red'
+LS_HIGHLIGHT = 'blue'
