@@ -17,3 +17,11 @@ SELECTED_ICON = '!'
 # Color when task is highlighted
 TS_HIGHLIGHT = 'red'
 LS_HIGHLIGHT = 'blue'
+
+# Display tasks with a border or as a single line
+COMPACT_TASKS = True
+
+# Prompt when renaming each item
+WORKSPACE_PROMPT = 'Rename workspace> '
+LIST_PROMPT = 'Rename list> '
+TASK_PROMPT = 'Rename task> '

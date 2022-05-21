@@ -1,8 +1,5 @@
-import curses
-from getkey import getkey, keys
 from rich.console import Console
-from rich.columns import Columns
-from rich.panel import Panel
+from rich.live import Live
 
 from input_handler import InputHandler
 from parse_md import get_ws_from_md
@@ -10,31 +7,21 @@ from parse_md import get_ws_from_md
 
 def main():
     console = Console()
-    console.clear()
-    ws_height = console.height - 1 - 3
+    ws_height = console.height - 1
+
     ws = get_ws_from_md('todo.md', ws_height)
+    ih = InputHandler(ws)
 
-    looping = True
-    while looping:
-        console.print(ws.render())
-        key = getkey()
-        if key == "q":
-            looping = False
-        elif key == keys.UP:
-            print('up')
-        elif key == 'w':
-            new_ws_name = input("New workspace title> ")
-            ws.rename(new_ws_name.strip())
-        elif key == 'w':
-            new_ws_name = input("New workspace title> ")
-            ws.rename(new_ws_name.strip())
-        elif key == 'w':
-            new_ws_name = input("New workspace title> ")
-            ws.rename(new_ws_name.strip())
+    with Live(ws.render(), auto_refresh=False, transient=True) as live:
+        is_looping = True
+        ih.ia.correct_selection()
+        while is_looping:
+            console.clear()
+            console.print(ws.render())
 
-        console.clear()
+            is_looping = ih.handle_inputs()
 
-    # ws.save('./todo-cli')
+            live.refresh()
 
 
 if __name__ == '__main__':

@@ -23,6 +23,18 @@ class List(AbstractPanel):
             ls.save(out)
 
     def get_selected_task(self):
-        for task in self.children:
+        for i, task in enumerate(self.children):
             if task.is_selected == True:
-                return task
+                return task, i
+        return None, -1
+
+    def set_selected(self, is_selected):
+        super().set_selected(is_selected)
+        if is_selected:
+            # If selected, select a child too
+            if len(self.children) > 0:
+                self.children[0].set_selected(True)
+        else:
+            selected_task, _ = self.get_selected_task()
+            if selected_task is not None:
+                selected_task.set_selected(False)

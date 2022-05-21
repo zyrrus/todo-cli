@@ -13,8 +13,8 @@ class Workspace(AbstractPanel):
     def render(self):
         list_panels = [ls.render() for ls in self.children]
         lists = Columns(list_panels, expand=True)
-        return Panel(lists, title=self.title, title_align="left",
-                     expand=True, height=self.height, box=WS_BORDER)
+        return Panel(lists, title=self.title + f' {self.get_selected_task()[1:]}', title_align="left",
+                     height=self.height, box=WS_BORDER)
 
     def save(self, out_file_dir='.'):
         filename = self.title.lower().replace(' ', '-')
@@ -25,10 +25,14 @@ class Workspace(AbstractPanel):
                 ls.save(out)
 
     def get_selected_list(self):
-        for ls in self.children:
+        for i, ls in enumerate(self.children):
             if ls.is_selected == True:
-                return ls
+                return ls, i
+        return None, -1
 
     def get_selected_task(self):
-        selected_list = self.get_selected_list()
-        return selected_list.get_selected_task()
+        selected_list, ls_i = self.get_selected_list()
+        if selected_list is not None:
+            selected_task, ts_i = selected_list.get_selected_task()
+            return selected_task, ls_i, ts_i
+        return None, -1, -1
