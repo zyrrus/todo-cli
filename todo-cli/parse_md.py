@@ -1,4 +1,3 @@
-from config import SELECTED_ICON
 from panels.workspace import Workspace
 from panels.list import List
 from panels.task import Task
@@ -29,13 +28,6 @@ def get_ws_from_md(md_filepath, ws_height):
             # Parse Task
             elif line.startswith('-'):
                 ts_name = line[1:].strip()
-                # Mark selected task + list
-                if ts_name.startswith(SELECTED_ICON):
-                    task = Task(ts_name[1:].strip())
-                    task.set_selected(True)
-                    last_list.set_selected(True)
-                else:
-                    task = Task(ts_name)
-                last_list.add_child(task)
+                last_list.add_child(Task(ts_name))
 
     return ws
