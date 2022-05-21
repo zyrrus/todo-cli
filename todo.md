@@ -1,22 +1,18 @@
 # Todo
 
-## List 1
+## TUI Backlog
 
--   Task 1
+- go to newly created items
+- begin rename on item creation
+- shift tasks L/R
+- shift lists L/R
 
-## List 2
+## CLI Backlog
 
--   Task 2
--   Task 3
+- Create new .md
+- Load existing .md
+- Help
 
-## List 1
+## Bugs
 
--   Task 1
-
-## List 2
-
--   Task 2
--   Task 3
--   Task 2
--   Task 3
--   Task 2
+- Width changes on rename
