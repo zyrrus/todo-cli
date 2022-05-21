@@ -2,17 +2,19 @@
 
 ## TUI Backlog
 
-- go to newly created items
-- begin rename on item creation
 - shift tasks L/R
 - shift lists L/R
 
 ## CLI Backlog
 
+- Help
 - Create new .md
 - Load existing .md
-- Help
+- 2
+- 1
+- 3
 
 ## Bugs
 
 - Width changes on rename
+- Prompt should change when 'renaming' new items

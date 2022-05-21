@@ -8,10 +8,19 @@ from panels.task import Task
 class InputHandler:
     def __init__(self, workspace=None):
         self.ia = InputActions(workspace)
-        self.key_map = {
+        self.task_move_mode = False
+        self.list_move_mode = False
+        
+
+        persistent_keys = {
             'q': self.ia.quit,
             keys.CTRL_S: self.ia.save_workspace,
-
+            keys.ENTER: self.toggle_task_move_mode,
+            keys.SINGLE_QUOTE: self.toggle_list_move_mode,
+        }
+        self.key_map = {
+            **persistent_keys,
+    
             'L': self.ia.add_list,
             'T': self.ia.add_task,
             keys.CTRL_L: self.ia.remove_list,
@@ -25,6 +34,22 @@ class InputHandler:
             keys.DOWN: self.ia.next_task,
             keys.LEFT: self.ia.prev_list,
             keys.RIGHT: self.ia.next_list,
+
+            'task_move_mode': {
+                **persistent_keys,
+
+                keys.UP: self.ia.shift_task_up,
+                keys.DOWN: self.ia.shift_task_down,
+                keys.LEFT: self.ia.shift_task_left,
+                keys.RIGHT: self.ia.shift_task_right,
+            },
+
+            'list_move_mode': {
+                **persistent_keys,
+
+                keys.LEFT: self.ia.shift_list_left,
+                keys.RIGHT: self.ia.shift_list_right,
+            }
         }
 
     def handle_inputs(self):
@@ -33,10 +58,36 @@ class InputHandler:
         key = getkey()
         should_quit = False
 
-        if key in self.key_map:
-            should_quit = self.key_map[key]() or False
+        action_map = self.key_map
+        if self.task_move_mode:
+            action_map = self.key_map['task_move_mode']
+        elif self.list_move_mode:
+            action_map = self.key_map['list_move_mode']
+
+        if key in action_map:
+            should_quit = action_map[key]() or False
 
         return not should_quit
+
+    def toggle_task_move_mode(self):
+        self.task_move_mode = not self.task_move_mode
+
+        # Disable the other mode if it was active when
+        # activating the current mode
+        if self.list_move_mode and self.task_move_mode:
+            self.list_move_mode = False
+
+        self.ia.ws.set_subtitle('task move mode active' if self.task_move_mode else '')
+
+    def toggle_list_move_mode(self):
+        self.list_move_mode = not self.list_move_mode
+
+        # Disable the other mode if it was active when
+        # activating the current mode
+        if self.task_move_mode and self.list_move_mode:
+            self.task_move_mode = False
+
+        self.ia.ws.set_subtitle('list move mode active' if self.list_move_mode else '')
 
 
 class InputActions:
@@ -55,19 +106,22 @@ class InputActions:
 
     def rename_workspace(self):
         new_ws_name = input(WORKSPACE_PROMPT)
-        self.ws.rename(new_ws_name.strip())
+        if new_ws_name.strip() != '':
+            self.ws.rename(new_ws_name.strip())
 
     def rename_list(self):
         ls, _ = self.ws.get_selected_list()
         if ls is not None:
             new_ls_name = input(LIST_PROMPT)
-            ls.rename(new_ls_name.strip())
+            if new_ls_name.strip() != '':
+                ls.rename(new_ls_name.strip())
 
     def rename_task(self):
         ts, _, _ = self.ws.get_selected_task()
         if ts is not None:
             new_ts_name = input(TASK_PROMPT)
-            ts.rename(new_ts_name.strip())
+            if new_ts_name.strip() != '':
+                ts.rename(new_ts_name.strip())
 
     # Creation/Deletion
 
@@ -78,6 +132,9 @@ class InputActions:
         index = ls_i if ls is not None else None
 
         self.ws.add_child(new_list, index)
+        
+        self.next_list()
+        self.rename_list()
 
     def add_task(self):
         new_task = Task(NEW_TASK_NAME)
@@ -86,6 +143,9 @@ class InputActions:
         if ls_i >= 0:
             index = ts_i if ts is not None else None
             self.ws.children[ls_i].add_child(new_task, index)
+
+            self.next_task()
+            self.rename_task()
 
     def remove_list(self):
         ls, ls_i = self.ws.get_selected_list()
@@ -113,7 +173,35 @@ class InputActions:
     def prev_task(self):
         self._change_task_selection(-1)
 
+    # Swap items
+
+    def shift_task_up(self): 
+        self._vertical_task_shift(-1)
+
+    def shift_task_down(self): 
+        self._vertical_task_shift(1)
+
+    def shift_task_left(self): 
+        pass
+
+    def shift_task_right(self): 
+        pass
+
+    def shift_list_left(self): 
+        self._list_shift(-1)
+
+    def shift_list_right(self): 
+        self._list_shift(1)
+
     # Utilities
+
+    def _vertical_task_shift(self, delta):
+        task, ls_i, ts_i = self.ws.get_selected_task()
+        ls = self.ws.children[ls_i]
+        if len(ls.children) > 1: 
+            next_ts_i = cycle(ts_i + delta, len(ls.children))
+            self.ws.set_subtitle(f'{ts_i} to {next_ts_i}')
+            ls.children[ts_i], ls.children[next_ts_i] = ls.children[next_ts_i], ls.children[ts_i]
 
     def _change_list_selection(self, delta):
         old, ls_i = self.ws.get_selected_list()

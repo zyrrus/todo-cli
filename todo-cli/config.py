@@ -13,7 +13,7 @@ TS_BORDER = box.ROUNDED
 __icons = '›»⦁♥♡'
 TASK_ICON = __icons[1]
 
-# Color when task is highlighted
+# Color when item is highlighted
 TS_HIGHLIGHT = 'red'
 LS_HIGHLIGHT = 'blue'
 

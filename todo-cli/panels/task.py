@@ -2,7 +2,7 @@ from rich.panel import Panel
 from rich.text import Text
 
 from panels.abstract_panel import AbstractPanel
-from config import TASK_ICON, TS_BORDER, COMPACT_TASKS
+from config import TASK_ICON, TS_BORDER, TS_HIGHLIGHT, COMPACT_TASKS
 
 
 class Task(AbstractPanel):
@@ -11,8 +11,8 @@ class Task(AbstractPanel):
 
     def render(self):
         if COMPACT_TASKS:
-            return Text(f'{TASK_ICON} {self.title}', style="red" if self.is_selected else "none", no_wrap=False)
-        return Panel(f'{TASK_ICON} {self.title}', style="red" if self.is_selected else "none", box=TS_BORDER)
+            return Text(f'{TASK_ICON} {self.title}', style=TS_HIGHLIGHT if self.is_selected else "none", no_wrap=False)
+        return Panel(f'{TASK_ICON} {self.title}', style=TS_HIGHLIGHT if self.is_selected else "none", box=TS_BORDER)
 
     def save(self, out):
         out.write(f'- {self.title}\n')
