@@ -1,6 +1,8 @@
 from getkey import getkey, keys
 
-from config import TASK_PROMPT, LIST_PROMPT, WORKSPACE_PROMPT
+from config import TASK_PROMPT, LIST_PROMPT, WORKSPACE_PROMPT, NEW_LIST_NAME, NEW_TASK_NAME
+from panels.list import List
+from panels.task import Task
 
 
 class InputHandler:
@@ -15,10 +17,9 @@ class InputHandler:
             keys.CTRL_L: self.ia.remove_list,
             keys.CTRL_T: self.ia.remove_task,
 
-
             'w': self.ia.rename_workspace,
             'l': self.ia.rename_list,
-            'r': self.ia.rename_task,
+            't': self.ia.rename_task,
 
             keys.UP: self.ia.prev_task,
             keys.DOWN: self.ia.next_task,
@@ -57,22 +58,34 @@ class InputActions:
         self.ws.rename(new_ws_name.strip())
 
     def rename_list(self):
-        new_ls_name = input(LIST_PROMPT)
         ls, _ = self.ws.get_selected_list()
-        ls.rename(new_ls_name.strip())
+        if ls is not None:
+            new_ls_name = input(LIST_PROMPT)
+            ls.rename(new_ls_name.strip())
 
     def rename_task(self):
-        new_ts_name = input(TASK_PROMPT)
         ts, _, _ = self.ws.get_selected_task()
-        ts.rename(new_ts_name.strip())
+        if ts is not None:
+            new_ts_name = input(TASK_PROMPT)
+            ts.rename(new_ts_name.strip())
 
     # Creation/Deletion
 
     def add_list(self):
-        pass
+        new_list = List(self.ws.height - 2, NEW_LIST_NAME)
+
+        ls, ls_i = self.ws.get_selected_list()
+        index = ls_i if ls is not None else None
+
+        self.ws.add_child(new_list, index)
 
     def add_task(self):
-        pass
+        new_task = Task(NEW_TASK_NAME)
+
+        ts, ls_i, ts_i = self.ws.get_selected_task()
+        if ls_i >= 0:
+            index = ts_i if ts is not None else None
+            self.ws.children[ls_i].add_child(new_task, index)
 
     def remove_list(self):
         ls, ls_i = self.ws.get_selected_list()

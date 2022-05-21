@@ -14,7 +14,7 @@ class AbstractPanel(ABC):
         if index is None:
             self.children.append(panel)
         else:
-            self.children.insert(index, panel)
+            self.children.insert(index + 1, panel)
 
     def remove_child(self, index=-1):
         self.children.pop(index)

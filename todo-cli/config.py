@@ -25,3 +25,7 @@ COMPACT_TASKS = True
 WORKSPACE_PROMPT = 'Rename workspace> '
 LIST_PROMPT = 'Rename list> '
 TASK_PROMPT = 'Rename task> '
+
+# Placeholder name when creating new item
+NEW_LIST_NAME = '...'
+NEW_TASK_NAME = '...'
