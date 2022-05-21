@@ -37,23 +37,3 @@ class DisplayManager:
         should_save = self.console.input("Would you like to save? [Y/n] ")
         if not should_save.lower().startswith('n'):
             self.console.print(f"Saved to {ws.save(self.save_location)}")
-
-
-'''
-console = Console()
-
-    ws_height = console.height - 1
-    ws = get_ws_from_md('todo.md', ws_height)
-
-    ih = InputHandler(ws)
-    ih.ia.correct_selection()
-
-    is_looping = True
-    while is_looping:
-        console.clear()
-        console.print(ws.render())
-
-        is_looping = ih.handle_inputs()
-
-    console.clear()
-    '''
