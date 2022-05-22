@@ -1,6 +1,6 @@
 from getkey import getkey, keys
 
-from config import TASK_PROMPT, LIST_PROMPT, WORKSPACE_PROMPT, NEW_LIST_NAME, NEW_TASK_NAME
+from config import TASK_PROMPT, LIST_PROMPT, WORKSPACE_PROMPT, NEW_LIST_NAME, NEW_TASK_NAME, NEW_LIST_PROMPT, NEW_TASK_PROMPT
 from panels.list import List
 from panels.task import Task
 
@@ -109,17 +109,17 @@ class InputActions:
         if new_ws_name.strip() != '':
             self.ws.rename(new_ws_name.strip())
 
-    def rename_list(self):
+    def rename_list(self, new=False):
         ls, _ = self.ws.get_selected_list()
         if ls is not None:
-            new_ls_name = input(LIST_PROMPT)
+            new_ls_name = input(NEW_LIST_PROMPT if new else LIST_PROMPT)
             if new_ls_name.strip() != '':
                 ls.rename(new_ls_name.strip())
 
-    def rename_task(self):
+    def rename_task(self, new=False):
         ts, _, _ = self.ws.get_selected_task()
         if ts is not None:
-            new_ts_name = input(TASK_PROMPT)
+            new_ts_name = input(NEW_TASK_PROMPT if new else TASK_PROMPT)
             if new_ts_name.strip() != '':
                 ts.rename(new_ts_name.strip())
 
@@ -133,20 +133,25 @@ class InputActions:
 
         self.ws.add_child(new_list, index)
         
+        new_list.set_selected(True)
         self.next_list()
-        self.rename_list()
 
-    def add_task(self, rename=True):
+        self.rename_list(new=True)
+
+    def add_task(self, rename=True, is_first_element=False):
         new_task = Task(NEW_TASK_NAME)
 
         ts, ls_i, ts_i = self.ws.get_selected_task()
         if ls_i >= 0:
             index = ts_i if ts is not None else None
-            self.ws.children[ls_i].add_child(new_task, index)
+            ls = self.ws.children[ls_i]
+            ls.add_child(new_task, -1 if is_first_element else index)
 
+            new_task.set_selected(True)
             self.next_task()
+
             if rename:
-                self.rename_task()
+                self.rename_task(new=True)
 
     def remove_list(self):
         ls, ls_i = self.ws.get_selected_list()
@@ -212,10 +217,12 @@ class InputActions:
                 self.prev_list()
             else:
                 self.next_list()
-            self.add_task(False)
+            self.add_task(False, True)
 
-            new_task, _, _ = self.ws.get_selected_task()
-            new_task.rename(old_task.title)
+            new_list, _ = self.ws.get_selected_list()
+            task = new_list.children[0]
+            task.rename(old_task.title)
+            self.prev_task()
 
     def _list_shift(self, delta): 
         ls, ls_i = self.ws.get_selected_list()

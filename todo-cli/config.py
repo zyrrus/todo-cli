@@ -13,9 +13,13 @@ TS_BORDER = box.ROUNDED
 __icons = '›»⦁♥♡'
 TASK_ICON = __icons[1]
 
-# Color when item is highlighted
-TS_HIGHLIGHT = 'red'
+# Style when item is highlighted
+TS_HIGHLIGHT = 'bold red'
 LS_HIGHLIGHT = 'blue'
+
+# Style when item is in move mode
+TS_MOVE = 'reverse'
+LS_MOVE = 'reverse'
 
 # Display tasks with a border or as a single line
 COMPACT_TASKS = True
@@ -24,6 +28,8 @@ COMPACT_TASKS = True
 WORKSPACE_PROMPT = 'Rename workspace> '
 LIST_PROMPT = 'Rename list> '
 TASK_PROMPT = 'Rename task> '
+NEW_LIST_PROMPT = 'Name new list> '
+NEW_TASK_PROMPT = 'Name new task> '
 
 # Placeholder name when creating new item
 NEW_LIST_NAME = '...'
