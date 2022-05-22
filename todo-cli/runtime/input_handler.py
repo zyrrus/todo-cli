@@ -136,7 +136,7 @@ class InputActions:
         self.next_list()
         self.rename_list()
 
-    def add_task(self):
+    def add_task(self, rename=True):
         new_task = Task(NEW_TASK_NAME)
 
         ts, ls_i, ts_i = self.ws.get_selected_task()
@@ -145,7 +145,8 @@ class InputActions:
             self.ws.children[ls_i].add_child(new_task, index)
 
             self.next_task()
-            self.rename_task()
+            if rename:
+                self.rename_task()
 
     def remove_list(self):
         ls, ls_i = self.ws.get_selected_list()
@@ -182,10 +183,10 @@ class InputActions:
         self._vertical_task_shift(1)
 
     def shift_task_left(self): 
-        pass
+        self._horizontal_task_shift(-1)
 
     def shift_task_right(self): 
-        pass
+        self._horizontal_task_shift(1)
 
     def shift_list_left(self): 
         self._list_shift(-1)
@@ -197,11 +198,30 @@ class InputActions:
 
     def _vertical_task_shift(self, delta):
         task, ls_i, ts_i = self.ws.get_selected_task()
-        ls = self.ws.children[ls_i]
-        if len(ls.children) > 1: 
-            next_ts_i = cycle(ts_i + delta, len(ls.children))
-            self.ws.set_subtitle(f'{ts_i} to {next_ts_i}')
-            ls.children[ts_i], ls.children[next_ts_i] = ls.children[next_ts_i], ls.children[ts_i]
+        if task is not None:
+            ls = self.ws.children[ls_i]
+            if len(ls.children) > 1: 
+                next_ts_i = cycle(ts_i + delta, len(ls.children))
+                ls.children[ts_i], ls.children[next_ts_i] = ls.children[next_ts_i], ls.children[ts_i]
+
+    def _horizontal_task_shift(self, delta): 
+        old_task, _, _ = self.ws.get_selected_task()
+        if old_task is not None:
+            self.remove_task()
+            if delta < 0:
+                self.prev_list()
+            else:
+                self.next_list()
+            self.add_task(False)
+
+            new_task, _, _ = self.ws.get_selected_task()
+            new_task.rename(old_task.title)
+
+    def _list_shift(self, delta): 
+        ls, ls_i = self.ws.get_selected_list()
+        if len(self.ws.children) > 1:
+            next_ls_i = cycle(ls_i + delta, len(self.ws.children))
+            self.ws.children[ls_i], self.ws.children[next_ls_i] = self.ws.children[next_ls_i], self.ws.children[ls_i]
 
     def _change_list_selection(self, delta):
         old, ls_i = self.ws.get_selected_list()
