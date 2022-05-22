@@ -212,8 +212,8 @@ class InputActions:
                 self.prev_list()
             else:
                 self.next_list()
+            self.add_task(False)
 
-            self.add_task()
             new_task, _, _ = self.ws.get_selected_task()
             new_task.rename(old_task.title)
 
