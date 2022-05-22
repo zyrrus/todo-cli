@@ -1,15 +1,11 @@
 # Todo
 
-## Backlog
-
-
 ## TUI Backlog
 
 - Flicker selection when moving
 
 ## CLI Backlog
 
-- Load from cmd arg
 
 ## Bugs
 
@@ -18,3 +14,4 @@
 - Moving tasks L/R always goes to 2nd row
 - Adding list/task when not selected doesn't prompt for rename
 - When there isn't enough room, it sends lists offscreen
+- Moving task to empty list crashes

@@ -54,6 +54,7 @@ class DisplayManager:
 
     def run_tui(self, existing_file=None):
         if existing_file is not None:
+            existing_file += '' if existing_file.endswith('.md') else '.md'
             ws = self.load_existing(existing_file)
         else:
             ws = self.create_new()
@@ -116,5 +117,4 @@ class DisplayManager:
 
     def create_new(self):
         ws = Workspace(self.workspace_height)
-
         return ws
