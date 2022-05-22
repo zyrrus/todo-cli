@@ -2,7 +2,6 @@
 
 ## Backlog
 
-- Clean up git branches
 
 ## TUI Backlog
 
