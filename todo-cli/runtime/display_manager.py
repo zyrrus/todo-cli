@@ -53,25 +53,26 @@ class DisplayManager:
                 break
 
     def run_tui(self, existing_file=None):
+        # Load workspace
         if existing_file is not None:
             existing_file += '' if existing_file.endswith('.md') else '.md'
             ws = self.load_existing(existing_file)
         else:
             ws = self.create_new()
 
+        # Initialize the keyboard input module
         ih = InputHandler(ws)
         ih.ia.correct_selection()
 
-        self.console.print(f'Opening {existing_file}')
+        # Begin event loop
         is_looping = True
         while is_looping:
             self.console.clear()
             self.console.print(ws.render())
-
             is_looping = ih.handle_inputs()
-
         self.console.clear()
 
+        # Ask to save on quit
         should_save = self.console.input("Would you like to save? [Y/n] ")
         if not should_save.lower().startswith('n'):
             self.console.print(f"Saved to {ws.save(self.save_location)}")
