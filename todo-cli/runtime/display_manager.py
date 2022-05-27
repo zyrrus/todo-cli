@@ -15,7 +15,7 @@ class DisplayManager:
         self.workspace_height = self.console.height - 1
         self.save_location = DEFAULT_PATH
         self.help_text = self.generate_help_text()
-        
+
         self.console.clear()
 
     def run_cli(self):
@@ -30,25 +30,26 @@ class DisplayManager:
             # Prompt user for command
             inp = self.console.input('todo-cli> ')
             inputs = inp.split()
-            
+
             # Split command from any potential arguments
             inp = inputs[0].lower() if len(inputs) > 0 else inp
-        
+
             # Run matching command
-            if inp in aliases['help']: 
+            if inp in aliases['help']:
                 self.console.print(self.help_text)
-            elif inp in aliases['open']: 
+            elif inp in aliases['open']:
                 if len(inputs) == 2:
                     filename = inputs[1]
                     self.run_tui(filename)
                     break
                 else:
-                    self.console.print('Missing arguments for `open PATH_TO_MD` command', style='red')
-            elif inp in aliases['make']: 
+                    self.console.print(
+                        'Missing arguments for `open PATH_TO_MD` command', style='red')
+            elif inp in aliases['make']:
                 if len(inputs) == 2:
                     self.save_location = inputs[1]
                 self.run_tui()
-                break 
+                break
             elif inp in aliases['quit']:
                 break
 
@@ -83,8 +84,10 @@ class DisplayManager:
         help_cmd.add_column("args")
         help_cmd.add_column("description")
         help_cmd.add_row("help", "", 'Show available commands')
-        help_cmd.add_row("open", "PATH_TO_MD", 'Open workspace using existing .md file')
-        help_cmd.add_row("make", "[OUTPUT_DIR]", 'Create new workspace in default/defined directory')
+        help_cmd.add_row("open", "PATH_TO_MD",
+                         'Open workspace using existing .md file')
+        help_cmd.add_row(
+            "make", "[OUTPUT_DIR]", 'Create new workspace in default/defined directory')
         help_cmd.add_row("quit", "", 'Exit the program')
         return help_cmd
 
@@ -92,7 +95,7 @@ class DisplayManager:
         ls_height = self.workspace_height - 2
         ws = Workspace(self.workspace_height)
 
-        with open('todo.md') as in_file:
+        with open(md_filepath) as in_file:
             last_list = None
 
             for line in in_file:

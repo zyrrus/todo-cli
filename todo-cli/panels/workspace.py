@@ -20,7 +20,7 @@ class Workspace(AbstractPanel):
     def save(self, out_file_dir='.'):
         filename = self.title.lower().replace(' ', '-')
         full_path = f'{out_file_dir}/{filename}.md'
-        with open(full_path, 'w') as out:
+        with open(full_path, 'w+') as out:
             out.write(f'# {self.title}\n')
 
             for ls in self.children:

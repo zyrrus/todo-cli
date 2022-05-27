@@ -1,7 +1,7 @@
 from rich import box
 
 # Path where .md files are located and saved
-DEFAULT_PATH = '.'
+DEFAULT_PATH = '/home/zyrrus/.todo'
 
 # Border styles
 # box.{ASCII, DOUBLE, HEAVY, ROUNDED, SQUARE}
