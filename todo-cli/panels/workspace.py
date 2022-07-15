@@ -1,8 +1,8 @@
 from rich.columns import Columns
 from rich.panel import Panel
 
+import config
 from panels.abstract_panel import AbstractPanel
-from config import WS_BORDER
 
 
 class Workspace(AbstractPanel):
@@ -15,7 +15,7 @@ class Workspace(AbstractPanel):
         list_panels = [ls.render() for ls in self.children]
         lists = Columns(list_panels, expand=True)
         return Panel(lists, title=self.title, title_align="left", subtitle=self.subtitle,
-                     height=self.height, box=WS_BORDER)
+                     height=self.height, box=config.get('WS_BORDER'))
 
     def save(self, out_file_dir='.'):
         filename = self.title.lower().replace(' ', '-')

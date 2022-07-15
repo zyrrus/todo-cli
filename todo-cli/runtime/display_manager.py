@@ -1,8 +1,12 @@
+from os import listdir
+from os.path import isfile, join
+
 from rich.console import Console
 from rich.live import Live
 from rich.table import Table
+from rich.tree import Tree
 
-from config import DEFAULT_PATH
+import config
 from panels.workspace import Workspace
 from panels.list import List
 from panels.task import Task
@@ -13,7 +17,7 @@ class DisplayManager:
     def __init__(self):
         self.console = Console()
         self.workspace_height = self.console.height - 1
-        self.save_location = DEFAULT_PATH
+        self.save_location = config.get('DEFAULT_PATH')
         self.help_text = self.generate_help_text()
 
         self.console.clear()
@@ -21,14 +25,17 @@ class DisplayManager:
     def run_cli(self):
         aliases = {
             'help': ['help', 'h'],
-            'open': ['open', 'o'],
-            'make': ['make', 'm'],
+            'load': ['load', 'l'],
+            'new': ['new', 'n'],
+            'list': ['list', 'ls'],
             'quit': ['quit', 'q'],
         }
 
+        self.console.print(self.help_text)
+
         while True:
             # Prompt user for command
-            inp = self.console.input('todo-cli> ')
+            inp = self.console.input(config.get('CLI_PROMPT'))
             inputs = inp.split()
 
             # Split command from any potential arguments
@@ -37,19 +44,23 @@ class DisplayManager:
             # Run matching command
             if inp in aliases['help']:
                 self.console.print(self.help_text)
-            elif inp in aliases['open']:
+            elif inp in aliases['load']:
                 if len(inputs) == 2:
                     filename = inputs[1]
                     self.run_tui(filename)
                     break
                 else:
                     self.console.print(
-                        'Missing arguments for `open PATH_TO_MD` command', style='red')
-            elif inp in aliases['make']:
+                        'Missing arguments for `load PATH_TO_MD` command', style='red')
+            elif inp in aliases['new']:
                 if len(inputs) == 2:
                     self.save_location = inputs[1]
                 self.run_tui()
                 break
+            elif inp in aliases['list']:
+                if len(inputs) == 2:
+                    self.save_location = inputs[1]
+                self.list_workspaces()
             elif inp in aliases['quit']:
                 break
 
@@ -84,10 +95,12 @@ class DisplayManager:
         help_cmd.add_column("args")
         help_cmd.add_column("description")
         help_cmd.add_row("help", "", 'Show available commands')
-        help_cmd.add_row("open", "PATH_TO_MD",
-                         'Open workspace using existing .md file')
         help_cmd.add_row(
-            "make", "[OUTPUT_DIR]", 'Create new workspace in default/defined directory')
+            "new", "[OUTPUT_DIR]", 'Create new workspace in default/defined directory')
+        help_cmd.add_row("load", "PATH_TO_MD",
+                         'Load workspace from existing .md file')
+        help_cmd.add_row("list", "[SOURCE_DIR]",
+                         'Show existing workspaces in default/defined directory')
         help_cmd.add_row("quit", "", 'Exit the program')
         return help_cmd
 
@@ -122,3 +135,11 @@ class DisplayManager:
     def create_new(self):
         ws = Workspace(self.workspace_height)
         return ws
+
+    def list_workspaces(self):
+        tree = Tree(self.save_location)
+        onlyfiles = [f for f in listdir(self.save_location) if isfile(
+            join(self.save_location, f))]
+        for file in onlyfiles:
+            tree.add(file)
+        self.console.print(tree)

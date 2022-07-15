@@ -3,9 +3,11 @@
 import sys
 
 from runtime.display_manager import DisplayManager
+import config
 
 
 def main():
+    config.read_config()
     dm = DisplayManager()
 
     if len(sys.argv) > 1:

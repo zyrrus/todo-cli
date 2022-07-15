@@ -1,6 +1,6 @@
 from getkey import getkey, keys
 
-from config import TASK_PROMPT, LIST_PROMPT, WORKSPACE_PROMPT, NEW_LIST_NAME, NEW_TASK_NAME, NEW_LIST_PROMPT, NEW_TASK_PROMPT
+import config
 from panels.list import List
 from panels.task import Task
 
@@ -10,7 +10,6 @@ class InputHandler:
         self.ia = InputActions(workspace)
         self.task_move_mode = False
         self.list_move_mode = False
-        
 
         persistent_keys = {
             'q': self.ia.quit,
@@ -20,7 +19,7 @@ class InputHandler:
         }
         self.key_map = {
             **persistent_keys,
-    
+
             'L': self.ia.add_list,
             'T': self.ia.add_task,
             keys.CTRL_L: self.ia.remove_list,
@@ -77,7 +76,8 @@ class InputHandler:
         if self.list_move_mode and self.task_move_mode:
             self.list_move_mode = False
 
-        self.ia.ws.set_subtitle('task move mode active' if self.task_move_mode else '')
+        self.ia.ws.set_subtitle(
+            'task move mode active' if self.task_move_mode else '')
 
     def toggle_list_move_mode(self):
         self.list_move_mode = not self.list_move_mode
@@ -87,7 +87,8 @@ class InputHandler:
         if self.task_move_mode and self.list_move_mode:
             self.task_move_mode = False
 
-        self.ia.ws.set_subtitle('list move mode active' if self.list_move_mode else '')
+        self.ia.ws.set_subtitle(
+            'list move mode active' if self.list_move_mode else '')
 
 
 class InputActions:
@@ -105,41 +106,43 @@ class InputActions:
     # Rename
 
     def rename_workspace(self):
-        new_ws_name = input(WORKSPACE_PROMPT)
+        new_ws_name = input(config.get('WORKSPACE_PROMPT'))
         if new_ws_name.strip() != '':
             self.ws.rename(new_ws_name.strip())
 
     def rename_list(self, new=False):
         ls, _ = self.ws.get_selected_list()
         if ls is not None:
-            new_ls_name = input(NEW_LIST_PROMPT if new else LIST_PROMPT)
+            new_ls_name = input(config.get('NEW_LIST_PROMPT')
+                                if new else config.get('LIST_PROMPT'))
             if new_ls_name.strip() != '':
                 ls.rename(new_ls_name.strip())
 
     def rename_task(self, new=False):
         ts, _, _ = self.ws.get_selected_task()
         if ts is not None:
-            new_ts_name = input(NEW_TASK_PROMPT if new else TASK_PROMPT)
+            new_ts_name = input(config.get('NEW_TASK_PROMPT')
+                                if new else config.get('TASK_PROMPT'))
             if new_ts_name.strip() != '':
                 ts.rename(new_ts_name.strip())
 
     # Creation/Deletion
 
     def add_list(self):
-        new_list = List(self.ws.height - 2, NEW_LIST_NAME)
+        new_list = List(self.ws.height - 2, config.get('NEW_LIST_NAME'))
 
         ls, ls_i = self.ws.get_selected_list()
         index = ls_i if ls is not None else None
 
         self.ws.add_child(new_list, index)
-        
+
         new_list.set_selected(True)
         self.next_list()
 
         self.rename_list(new=True)
 
     def add_task(self, rename=True, is_first_element=False):
-        new_task = Task(NEW_TASK_NAME)
+        new_task = Task(config.get('NEW_TASK_NAME'))
 
         ts, ls_i, ts_i = self.ws.get_selected_task()
         if ls_i >= 0:
@@ -181,22 +184,22 @@ class InputActions:
 
     # Swap items
 
-    def shift_task_up(self): 
+    def shift_task_up(self):
         self._vertical_task_shift(-1)
 
-    def shift_task_down(self): 
+    def shift_task_down(self):
         self._vertical_task_shift(1)
 
-    def shift_task_left(self): 
+    def shift_task_left(self):
         self._horizontal_task_shift(-1)
 
-    def shift_task_right(self): 
+    def shift_task_right(self):
         self._horizontal_task_shift(1)
 
-    def shift_list_left(self): 
+    def shift_list_left(self):
         self._list_shift(-1)
 
-    def shift_list_right(self): 
+    def shift_list_right(self):
         self._list_shift(1)
 
     # Utilities
@@ -205,11 +208,11 @@ class InputActions:
         task, ls_i, ts_i = self.ws.get_selected_task()
         if task is not None:
             ls = self.ws.children[ls_i]
-            if len(ls.children) > 1: 
+            if len(ls.children) > 1:
                 next_ts_i = cycle(ts_i + delta, len(ls.children))
                 ls.children[ts_i], ls.children[next_ts_i] = ls.children[next_ts_i], ls.children[ts_i]
 
-    def _horizontal_task_shift(self, delta): 
+    def _horizontal_task_shift(self, delta):
         old_task, _, _ = self.ws.get_selected_task()
         if old_task is not None:
             self.remove_task()
@@ -224,7 +227,7 @@ class InputActions:
             task.rename(old_task.title)
             self.prev_task()
 
-    def _list_shift(self, delta): 
+    def _list_shift(self, delta):
         ls, ls_i = self.ws.get_selected_list()
         if len(self.ws.children) > 1:
             next_ls_i = cycle(ls_i + delta, len(self.ws.children))

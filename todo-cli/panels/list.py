@@ -1,8 +1,8 @@
 from rich.console import Group
 from rich.panel import Panel
 
+import config
 from panels.abstract_panel import AbstractPanel
-from config import LS_BORDER, LS_HIGHLIGHT
 
 
 class List(AbstractPanel):
@@ -11,10 +11,10 @@ class List(AbstractPanel):
         self.height = height
 
     def render(self):
-        selected = LS_HIGHLIGHT if self.is_selected else "none"
+        selected = config.get('LS_HIGHLIGHT') if self.is_selected else "none"
         task_panels = [ts.render() for ts in self.children]
         tasks = Group(*task_panels)
-        return Panel(tasks, title=self.title, title_align="left", height=self.height, box=LS_BORDER, style=selected)
+        return Panel(tasks, title=self.title, title_align="left", height=self.height, box=config.get('LS_BORDER'), style=selected)
 
     def save(self, out):
         out.write(f'\n## {self.title}\n\n')
